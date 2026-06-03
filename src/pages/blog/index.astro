@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
@@ -15,100 +14,93 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={`Blog — ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+		<main class="blog-list">
+			<h1>Blog</h1>
+			<p class="lede">All articles, newest first.</p>
+			<ul>
+				{
+					posts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`}>
+								{post.data.category && (
+									<span class="post-category">{post.data.category.toUpperCase()}</span>
+								)}
+								<h2>{post.data.title}</h2>
+								<p class="post-desc">{post.data.description}</p>
+								<p class="post-meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.readingTime && <span> · {post.data.readingTime}</span>}
+								</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
 		</main>
 		<Footer />
+		<style>
+			.blog-list {
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 3em 1.5em 4em;
+			}
+			.blog-list h1 {
+				margin: 0 0 0.25em;
+				font-size: 2.25rem;
+			}
+			.blog-list .lede {
+				color: rgb(var(--gray));
+				margin: 0 0 2em;
+			}
+			ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 1.25em;
+			}
+			ul li a {
+				display: block;
+				padding: 1.5em;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				text-decoration: none;
+				color: inherit;
+				transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+			}
+			ul li a:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 6px 20px rgba(var(--black), 6%);
+				border-color: rgb(var(--gray));
+			}
+			.post-category {
+				display: inline-block;
+				font-size: 0.7rem;
+				color: var(--accent);
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				margin-bottom: 0.5em;
+			}
+			ul li h2 {
+				margin: 0 0 0.4em;
+				font-size: 1.3rem;
+				color: rgb(var(--black));
+			}
+			.post-desc {
+				margin: 0 0 0.6em;
+				color: rgb(var(--gray-dark));
+				font-size: 0.95rem;
+			}
+			.post-meta {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.85rem;
+			}
+		</style>
 	</body>
 </html>

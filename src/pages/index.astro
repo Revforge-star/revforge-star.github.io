@@ -1,8 +1,24 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import {
+	ABOUT_BIO,
+	HERO_HEADING,
+	HERO_SUBTITLE,
+	SITE_DESCRIPTION,
+	SITE_TITLE,
+} from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latest = posts.slice(0, 3);
+
+const HERO_IMAGE =
+	'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&q=80&auto=format&fit=crop';
 ---
 
 <!doctype html>
@@ -12,38 +28,338 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		<main class="home">
+			<section class="hero">
+				<div class="hero-text">
+					<h1>{HERO_HEADING}</h1>
+					<p class="hero-sub">{HERO_SUBTITLE}</p>
+					<div class="cta">
+						<a class="btn btn-primary" href="/blog">Read the Blog</a>
+						<a class="btn btn-secondary" href="/about">About Me</a>
+					</div>
+				</div>
+				<div class="hero-image">
+					<img src={HERO_IMAGE} alt="A clean workspace with a laptop, coffee, and a plant" loading="eager" />
+				</div>
+			</section>
+
+			<section class="articles">
+				<div class="articles-header">
+					<h2>Latest Articles</h2>
+					<a href="/blog" class="view-all">View all articles →</a>
+				</div>
+				<div class="articles-grid">
+					{
+						latest.map((post) => (
+							<a href={`/blog/${post.id}/`} class="card">
+								{post.data.category && (
+									<span class="card-category">{post.data.category.toUpperCase()}</span>
+								)}
+								<h3 class="card-title">{post.data.title}</h3>
+								<p class="card-desc">{post.data.description}</p>
+								<div class="card-meta">
+									<span class="card-date"><FormattedDate date={post.data.pubDate} /></span>
+									{post.data.readingTime && (
+										<span class="card-read"> · {post.data.readingTime}</span>
+									)}
+									<span class="card-link">Read more →</span>
+								</div>
+							</a>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="about" id="about">
+				<div class="about-row">
+					<img src="/images/profile-placeholder.svg" alt="Profile placeholder" class="avatar" />
+					<div class="about-text">
+						<h2>About Me</h2>
+						<p>{ABOUT_BIO}</p>
+						<a href="/about" class="link-arrow">More about me →</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="newsletter">
+				<div class="newsletter-inner">
+					<div>
+						<h3>Get practical insights in your inbox</h3>
+						<p>Occasional notes on GTM, revenue ops, AI, and business tech. No spam.</p>
+					</div>
+					<form
+						action="#"
+						method="post"
+						onsubmit="event.preventDefault(); alert('Newsletter signup is not wired up yet. Add an email service like Buttondown, ConvertKit, or Mailchimp to enable this.');"
+					>
+						<input type="email" placeholder="Enter your email" aria-label="Email address" required />
+						<button type="submit">Subscribe</button>
+					</form>
+				</div>
+			</section>
 		</main>
 		<Footer />
+		<style>
+			.home {
+				max-width: 1200px;
+				width: 100%;
+				margin: 0 auto;
+				padding: 0 1.5em;
+			}
+
+			/* --- Hero --- */
+			.hero {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 3em;
+				align-items: center;
+				padding: 3em 0 4em;
+			}
+			.hero h1 {
+				font-size: 2.5rem;
+				line-height: 1.15;
+				margin-bottom: 0.75em;
+				color: rgb(var(--black));
+			}
+			.hero-sub {
+				font-size: 1.05rem;
+				color: rgb(var(--gray-dark));
+				margin-bottom: 1.5em;
+				max-width: 36em;
+			}
+			.cta {
+				display: flex;
+				gap: 0.75em;
+				flex-wrap: wrap;
+			}
+			.btn {
+				display: inline-block;
+				padding: 0.7em 1.4em;
+				border-radius: 6px;
+				text-decoration: none;
+				font-weight: 600;
+				font-size: 0.95rem;
+				transition: transform 0.05s ease, box-shadow 0.15s ease;
+			}
+			.btn:hover {
+				transform: translateY(-1px);
+			}
+			.btn-primary {
+				background: rgb(var(--black));
+				color: #fff;
+			}
+			.btn-primary:hover {
+				background: rgb(var(--gray-dark));
+				color: #fff;
+			}
+			.btn-secondary {
+				background: #fff;
+				color: rgb(var(--black));
+				border: 1.5px solid rgb(var(--gray-light));
+			}
+			.btn-secondary:hover {
+				border-color: rgb(var(--gray));
+				color: rgb(var(--black));
+			}
+			.hero-image img {
+				width: 100%;
+				border-radius: 12px;
+				box-shadow: 0 10px 30px rgba(var(--black), 8%);
+				aspect-ratio: 4 / 3;
+				object-fit: cover;
+			}
+
+			/* --- Articles --- */
+			.articles {
+				padding: 2em 0 4em;
+			}
+			.articles-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				margin-bottom: 1.5em;
+				border-bottom: 2px solid rgb(var(--gray-light));
+				padding-bottom: 0.5em;
+			}
+			.articles-header h2 {
+				font-size: 1.5rem;
+				margin: 0;
+			}
+			.view-all {
+				font-size: 0.9rem;
+				color: var(--accent);
+				text-decoration: none;
+				font-weight: 500;
+			}
+			.view-all:hover {
+				text-decoration: underline;
+			}
+			.articles-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1.5em;
+			}
+			.card {
+				display: flex;
+				flex-direction: column;
+				padding: 1.5em;
+				background: #fff;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				text-decoration: none;
+				color: inherit;
+				transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+			}
+			.card:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 6px 20px rgba(var(--black), 6%);
+				border-color: rgb(var(--gray));
+			}
+			.card-category {
+				font-size: 0.7rem;
+				color: var(--accent);
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				margin-bottom: 0.75em;
+			}
+			.card-title {
+				font-size: 1.15rem;
+				margin: 0 0 0.5em;
+				line-height: 1.3;
+			}
+			.card-desc {
+				font-size: 0.95rem;
+				color: rgb(var(--gray-dark));
+				margin: 0 0 1em;
+				flex: 1;
+			}
+			.card-meta {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+			}
+			.card-link {
+				color: var(--accent);
+				font-weight: 500;
+			}
+
+			/* --- About --- */
+			.about {
+				padding: 3em 0;
+				border-top: 1px solid rgb(var(--gray-light));
+			}
+			.about-row {
+				display: grid;
+				grid-template-columns: 140px 1fr;
+				gap: 2em;
+				align-items: center;
+			}
+			.avatar {
+				width: 140px;
+				height: 140px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+			.about-text h2 {
+				margin: 0 0 0.5em;
+				font-size: 1.5rem;
+			}
+			.about-text p {
+				margin: 0 0 0.75em;
+				color: rgb(var(--gray-dark));
+				max-width: 50em;
+			}
+			.link-arrow {
+				color: var(--accent);
+				text-decoration: none;
+				font-weight: 500;
+			}
+			.link-arrow:hover {
+				text-decoration: underline;
+			}
+
+			/* --- Newsletter --- */
+			.newsletter {
+				background: rgb(var(--gray-light));
+				border-radius: 12px;
+				padding: 2em;
+				margin: 2em 0 4em;
+			}
+			.newsletter-inner {
+				display: grid;
+				grid-template-columns: 1fr auto;
+				gap: 2em;
+				align-items: center;
+			}
+			.newsletter h3 {
+				margin: 0 0 0.25em;
+				font-size: 1.25rem;
+			}
+			.newsletter p {
+				margin: 0;
+				color: rgb(var(--gray-dark));
+				font-size: 0.95rem;
+			}
+			.newsletter form {
+				display: flex;
+				gap: 0.5em;
+			}
+			.newsletter input[type='email'] {
+				padding: 0.7em 1em;
+				border: 1px solid rgb(var(--gray));
+				border-radius: 6px;
+				min-width: 220px;
+				font-size: 0.95rem;
+				background: #fff;
+			}
+			.newsletter button {
+				padding: 0.7em 1.4em;
+				background: rgb(var(--black));
+				color: #fff;
+				border: none;
+				border-radius: 6px;
+				font-weight: 600;
+				cursor: pointer;
+				font-size: 0.95rem;
+			}
+			.newsletter button:hover {
+				background: rgb(var(--gray-dark));
+			}
+
+			/* --- Responsive --- */
+			@media (max-width: 900px) {
+				.hero {
+					grid-template-columns: 1fr;
+					gap: 2em;
+				}
+				.hero h1 {
+					font-size: 2rem;
+				}
+				.articles-grid {
+					grid-template-columns: 1fr;
+				}
+				.about-row {
+					grid-template-columns: 1fr;
+					justify-items: center;
+					text-align: center;
+				}
+				.about-text p {
+					margin-left: auto;
+					margin-right: auto;
+				}
+				.newsletter-inner {
+					grid-template-columns: 1fr;
+				}
+				.newsletter form {
+					flex-direction: column;
+				}
+				.newsletter input[type='email'] {
+					min-width: 0;
+					width: 100%;
+				}
+			}
+		</style>
 	</body>
 </html>
