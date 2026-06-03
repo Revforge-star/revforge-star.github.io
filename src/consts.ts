@@ -4,7 +4,7 @@
 export const SITE_TITLE = 'Modern Revenue Blog';
 export const SITE_DESCRIPTION =
 	'Simple, practical writing on GTM strategy, revenue processes, AI, and business technology';
-export const SITE_TAGLINE = 'GTM • Revenue Ops • AI • Business Technology';
+export const SITE_TAGLINE = 'GTM • Revenue Ops • AI • Business Technology • Enterprise Architecture';
 export const HERO_HEADING =
 	'Practical insights on GTM, Revenue Operations, AI, and Business Technology.';
 export const HERO_SUBTITLE =

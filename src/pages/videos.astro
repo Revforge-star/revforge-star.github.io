@@ -1,0 +1,51 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Videos — ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main class="videos-page">
+			<h1>Videos</h1>
+			<p class="lede">Coming soon.</p>
+			<p>
+				This page will hold video content once published. To start adding videos, edit
+				<code>src/pages/videos.astro</code> and replace this placeholder with embeds, a list, or
+				whatever format you prefer.
+			</p>
+		</main>
+		<Footer />
+		<style>
+			.videos-page {
+				max-width: 760px;
+				margin: 0 auto;
+				padding: 4em 1.5em;
+				text-align: center;
+			}
+			.videos-page h1 {
+				margin: 0 0 0.25em;
+				font-size: 2.25rem;
+			}
+			.videos-page .lede {
+				color: rgb(var(--gray));
+				margin: 0 0 1.5em;
+				font-size: 1.1rem;
+			}
+			.videos-page p {
+				color: rgb(var(--gray-dark));
+				max-width: 36em;
+				margin: 0 auto 1em;
+			}
+			code {
+				font-size: 0.9em;
+			}
+		</style>
+	</body>
+</html>
