@@ -1,10 +1,10 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
 
-export const SITE_TITLE = 'Modern Revenue Blog';
+export const SITE_TITLE = 'Designing Smarter Revenue Systems';
 export const SITE_DESCRIPTION =
-	'Simple, practical writing on GTM strategy, revenue processes, AI, and business technology';
-export const SITE_TAGLINE = 'GTM • Revenue Ops • AI • Business Technology • Enterprise Architecture';
+	'Thoughts on GTM systems, AI, CPQ and quote-to-cash';
+export const SITE_TAGLINE = 'GTM • AI • Revenue • Enterprise Architecture';
 export const HERO_HEADING =
 	'Practical insights on GTM, Revenue Operations, AI, and Business Technology.';
 export const HERO_SUBTITLE =
