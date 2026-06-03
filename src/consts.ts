@@ -6,8 +6,8 @@ export const SITE_DESCRIPTION =
 	'Thoughts on GTM systems, AI, CPQ and quote-to-cash';
 export const SITE_TAGLINE = 'GTM • AI • Revenue • Enterprise Architecture';
 export const HERO_HEADING =
-	'Practical insights on GTM, Revenue Operations, AI, and Business Technology.';
+	'Practical insights on GTM, AI, CPQ, and the systems behind modern revenue.';
 export const HERO_SUBTITLE =
-	'Real-world experiences, frameworks, and lessons that help teams design, implement, and improve revenue systems.';
+	'Real-world experiences, frameworks, and lessons on building the systems that move revenue.';
 export const ABOUT_BIO =
-	'I write about GTM strategy, revenue operations, AI, and business technology — drawn from real-world experience.';
+	'I write about GTM, AI, CPQ, quote-to-cash, and enterprise architecture — drawn from real-world experience.';
